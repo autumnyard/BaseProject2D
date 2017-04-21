@@ -17,7 +17,7 @@ public class PanelBase : MonoBehaviour
 
     public void Show()
     {
-        Debug.Log("Show UI menu: " + name);
+        //Debug.Log("Show UI menu: " + name);
         gameObject.SetActive(true);
         //canvas.SetAlpha( 1f );
     }
@@ -26,6 +26,6 @@ public class PanelBase : MonoBehaviour
     {
         //canvas.SetAlpha( 0f );
         gameObject.SetActive(false);
-        Debug.Log("Hide UI menu: " + name);
+        //Debug.Log("Hide UI menu: " + name);
     }
 }

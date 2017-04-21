@@ -8,6 +8,8 @@ public class ManagerUI : MonoBehaviour
     private PanelBase panelMenu;
     [SerializeField]
     private PanelBase panelHUD;
+    [SerializeField]
+    private PanelBase panelLoading;
 
     void Awake()
     {
@@ -23,16 +25,25 @@ public class ManagerUI : MonoBehaviour
             case Structs.GameScene.Menu:
                 panelMenu.Show();
                 panelHUD.Hide();
+                panelLoading.Hide();
                 break;
 
             case Structs.GameScene.Ingame:
                 panelMenu.Hide();
                 panelHUD.Show();
+                panelLoading.Hide();
+                break;
+
+            case Structs.GameScene.LoadingGame:
+                panelMenu.Hide();
+                panelHUD.Hide();
+                panelLoading.Show();
                 break;
 
             default:
                 panelMenu.Hide();
                 panelHUD.Hide();
+                panelLoading.Hide();
                 break;
         }
     }

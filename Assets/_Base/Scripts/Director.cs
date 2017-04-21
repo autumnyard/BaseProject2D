@@ -12,7 +12,7 @@ public class Director : MonoBehaviour
     //public MapManager mapManager;
     //public EntityManager entityManager;
     //public WavesManager waveManager;
-    //public InputManager inputManager;
+    public ManagerInput managerInput;
     public ManagerUI managerUI;
     //public ScoreManager scoreManager;
 
@@ -60,7 +60,8 @@ public class Director : MonoBehaviour
     private void ChangeScene(Structs.GameScene to)
     {
         currentScene = to;
-        Debug.Log("Change scene to: " + currentScene);
+        
+        //Debug.Log("Change scene to: " + currentScene);
 
         switch (currentScene)
         {
@@ -69,6 +70,7 @@ public class Director : MonoBehaviour
                 break;
 
             case Structs.GameScene.Menu:
+                managerInput.SetEvents();
                 managerUI.UpdateUI();
                 break;
 
@@ -81,18 +83,20 @@ public class Director : MonoBehaviour
                 //InitCamera();
                 //SetCameraOnPlayer();
                 //GameStart();
+                managerUI.UpdateUI();
                 SwitchToIngame();
                 break;
-
 
             case Structs.GameScene.Ingame:
                 //inputManager.SetEvents();
                 //uiManager.UpdateUI();
+                managerInput.SetEvents();
                 managerUI.UpdateUI();
                 break;
 
             case Structs.GameScene.GameEnd:
                 //entityManager.Reset();
+                managerInput.SetEvents();
                 managerUI.UpdateUI();
                 SwitchToMenu();
                 break;
@@ -140,7 +144,7 @@ public class Director : MonoBehaviour
         ChangeScene(Structs.GameScene.Ingame);
     }
 
-    private void GameEnd()
+    public void GameEnd()
     {
         ChangeScene(Structs.GameScene.GameEnd);
     }
