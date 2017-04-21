@@ -9,14 +9,12 @@ public class Director : MonoBehaviour
     public GameManager gameManager;
     //public CameraManager cameraManager;
     //public Player player;
-    //public MapManager mapManager;
-    //public EntityManager entityManager;
+    public ManagerMap managerMap;
+    public ManagerEntity managerEntity;
     //public WavesManager waveManager;
     public ManagerInput managerInput;
     public ManagerUI managerUI;
     //public ScoreManager scoreManager;
-
-    //public Transform playerTransform;
 
     public Structs.GameMode currentGameMode { private set; get; }
     public Structs.GameDifficulty currentGameDifficulty { private set; get; }
@@ -60,7 +58,7 @@ public class Director : MonoBehaviour
     private void ChangeScene(Structs.GameScene to)
     {
         currentScene = to;
-        
+
         //Debug.Log("Change scene to: " + currentScene);
 
         switch (currentScene)
@@ -71,11 +69,10 @@ public class Director : MonoBehaviour
 
             case Structs.GameScene.Menu:
                 managerInput.SetEvents();
-                managerUI.UpdateUI();
+                managerUI.SetPanels();
                 break;
 
             case Structs.GameScene.LoadingGame:
-                //mapManager.Init();
                 //InitMap();
                 //entityManager.Init();
                 //GameInitialize();
@@ -83,21 +80,32 @@ public class Director : MonoBehaviour
                 //InitCamera();
                 //SetCameraOnPlayer();
                 //GameStart();
-                managerUI.UpdateUI();
+                managerUI.SetPanels();
                 SwitchToIngame();
                 break;
 
             case Structs.GameScene.Ingame:
                 //inputManager.SetEvents();
                 //uiManager.UpdateUI();
+                managerMap.SummonMap();
+                managerEntity.SummonPlayer();
+
+                if (managerEntity.playerScript != null)
+                {
+                    managerEntity.playerScript.OnDie += GameEnd;
+                }
+
                 managerInput.SetEvents();
-                managerUI.UpdateUI();
+                managerUI.SetPanels();
                 break;
 
             case Structs.GameScene.GameEnd:
-                //entityManager.Reset();
+                managerEntity.playerScript.OnDie -= GameEnd;
+
+                managerEntity.Reset();
+                managerMap.Reset();
                 managerInput.SetEvents();
-                managerUI.UpdateUI();
+                managerUI.SetPanels();
                 SwitchToMenu();
                 break;
 
@@ -151,7 +159,16 @@ public class Director : MonoBehaviour
 
     public void Exit()
     {
+        Debug.Log("Exit game!");
         ChangeScene(Structs.GameScene.Exit);
+    }
+    #endregion
+
+
+    #region DEBUG
+    public void DebugHurtPlayer()
+    {
+        managerEntity.playerScript.Hurt();
     }
     #endregion
 }

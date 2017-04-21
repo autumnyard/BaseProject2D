@@ -11,14 +11,27 @@ public class ManagerUI : MonoBehaviour
     [SerializeField]
     private PanelBase panelLoading;
 
+    // Panel HUD
+    [Header("Ingame HUD"), SerializeField] private UnityEngine.UI.Text health;
+    [SerializeField] private UnityEngine.UI.Text mana;
+    [SerializeField] private UnityEngine.UI.Text score;
+    [SerializeField] private UnityEngine.UI.Text enemycount;
+
     void Awake()
     {
         Director.Instance.managerUI = this;
     }
 
+    private void Update()
+    {
+        if (Director.Instance.currentScene == Structs.GameScene.Ingame)
+        {
+
+        }
+    }
 
     #region Panel management
-    public void UpdateUI()
+    public void SetPanels()
     {
         switch (Director.Instance.currentScene)
         {
@@ -45,6 +58,20 @@ public class ManagerUI : MonoBehaviour
                 panelHUD.Hide();
                 panelLoading.Hide();
                 break;
+        }
+    }
+    #endregion
+
+    #region Inagem HUD management
+    public void SetHealth(int newHealth)
+    {
+        if (newHealth < 0)
+        {
+            health.text = "Health: --";
+        }
+        else
+        {
+            health.text = "Health: " + newHealth.ToString("00");
         }
     }
     #endregion

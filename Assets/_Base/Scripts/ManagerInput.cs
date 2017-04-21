@@ -76,7 +76,7 @@ public class ManagerInput : MonoBehaviour
         //CallDelegate(OnKeyboard[(int)MyKeyboard.S], Input.GetKey(KeyCode.S));
         //CallDelegate(OnKeyboard[(int)MyKeyboard.D], Input.GetKey(KeyCode.D));
 
-        //CallDelegate(OnKeyboard[(int)MyKeyboard.Space], Input.GetKeyDown(KeyCode.Space));
+        CallDelegate(OnKeyboard[(int)MyKeyboard.Space], Input.GetKeyDown(KeyCode.Space));
         CallDelegate(OnKeyboard[(int)MyKeyboard.Enter], Input.GetKeyDown(KeyCode.Return));
         //CallDelegate(OnKeyboard[(int)MyKeyboard.Enter], Input.GetKeyDown(KeyCode.KeypadEnter));
         CallDelegate(OnKeyboard[(int)MyKeyboard.Escape], Input.GetKeyDown(KeyCode.Escape));
@@ -145,6 +145,7 @@ public class ManagerInput : MonoBehaviour
 
             case Structs.GameScene.Ingame:
                 // TODO: Descomentar todo esto!
+                Bind(ref OnKeyboard[(int)MyKeyboard.Space], Director.Instance.DebugHurtPlayer);
                 Bind(ref OnKeyboard[(int)MyKeyboard.Escape], Director.Instance.GameEnd);
                 //Bind(ref OnKeyboard[(int)MyKeyboard.W], Director.Instance.PlayerMoveForward);
                 //Bind(ref OnKeyboard[(int)MyKeyboard.S], Director.Instance.PlayerMoveBackward);
