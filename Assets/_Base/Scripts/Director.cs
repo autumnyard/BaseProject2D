@@ -20,6 +20,8 @@ public class Director : MonoBehaviour
     public Structs.GameDifficulty currentGameDifficulty { private set; get; }
     public Structs.GameView currentGameView { private set; get; }
     public Structs.GameScene currentScene;
+
+    public bool isPaused;
     #endregion
 
 
@@ -88,11 +90,11 @@ public class Director : MonoBehaviour
                 //inputManager.SetEvents();
                 //uiManager.UpdateUI();
                 managerMap.SummonMap();
-                managerEntity.SummonPlayer();
+                managerEntity.SummonPlayer( 0, Vector2.zero);
 
-                if (managerEntity.playerScript != null)
+                if (managerEntity.playersScript[0] != null)
                 {
-                    managerEntity.playerScript.OnDie += GameEnd;
+                    managerEntity.playersScript[0].OnDie += GameEnd;
                 }
 
                 managerInput.SetEvents();
@@ -100,7 +102,7 @@ public class Director : MonoBehaviour
                 break;
 
             case Structs.GameScene.GameEnd:
-                managerEntity.playerScript.OnDie -= GameEnd;
+                managerEntity.playersScript[0].OnDie -= GameEnd;
 
                 managerEntity.Reset();
                 managerMap.Reset();
@@ -166,9 +168,9 @@ public class Director : MonoBehaviour
 
 
     #region DEBUG
-    public void DebugHurtPlayer()
-    {
-        managerEntity.playerScript.Hurt();
-    }
+    //public void DebugHurtPlayer()
+    //{
+    //    managerEntity.playersScript[0].Hurt();
+    //}
     #endregion
 }
