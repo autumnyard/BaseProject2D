@@ -38,7 +38,7 @@ public class EntityBase : MonoBehaviour
 
     // Physics
     //[Header("Physics")]
-    private float runSpeed = 4f;
+    [SerializeField] private float runSpeed = 4f;
 
 
     // Tweens

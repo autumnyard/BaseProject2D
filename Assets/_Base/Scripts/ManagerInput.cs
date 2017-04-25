@@ -31,6 +31,8 @@ public class ManagerInput : MonoBehaviour
         ShiftRight,
         W, A, S, D,
         U, H, J, K,
+        Q,
+        E,
         Key0,
         Key1,
         Key2,
@@ -102,6 +104,10 @@ public class ManagerInput : MonoBehaviour
             CallDelegate( OnKeyboard[(int)MyKeyboard.J], Input.GetKey( KeyCode.J ) );
             CallDelegate( OnKeyboard[(int)MyKeyboard.H], Input.GetKey( KeyCode.H ) );
             CallDelegate( OnKeyboard[(int)MyKeyboard.K], Input.GetKey( KeyCode.K ) );
+
+            CallDelegate( OnKeyboard[(int)MyKeyboard.Q], Input.GetKey( KeyCode.Q ) );
+            CallDelegate( OnKeyboard[(int)MyKeyboard.E], Input.GetKey( KeyCode.E ) );
+
 
             // Special keys
             CallDelegate( OnKeyboard[(int)MyKeyboard.Space], Input.GetKeyDown( KeyCode.Space ) );
@@ -196,6 +202,9 @@ public class ManagerInput : MonoBehaviour
         {
             case Structs.GameScene.Menu:
                 Bind( ref OnKeyboard[(int)MyKeyboard.Enter], Director.Instance.GameBegin );
+                Bind( ref OnKeyboard[(int)MyKeyboard.Space], Director.Instance.GameBegin );
+                Bind( ref OnKeyboard[(int)MyKeyboard.E], Director.Instance.GameBegin );
+                Bind( ref OnKeyboard[(int)MyKeyboard.Q], Director.Instance.GameBegin );
                 Bind( ref OnKeyboard[(int)MyKeyboard.Escape], Director.Instance.Exit );
                 break;
 

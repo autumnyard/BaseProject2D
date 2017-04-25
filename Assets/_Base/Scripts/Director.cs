@@ -7,7 +7,7 @@ public class Director : MonoBehaviour
 
     #region Variables
     public GameManager gameManager;
-    //public CameraManager cameraManager;
+    public ManagerCamera managerCamera;
     //public Player player;
     public ManagerMap managerMap;
     public ManagerEntity managerEntity;
@@ -35,11 +35,11 @@ public class Director : MonoBehaviour
 
     static Director()
     {
-        GameObject obj = GameObject.Find("Director");
+        GameObject obj = GameObject.Find( "Director" );
 
         if (obj == null)
         {
-            obj = new GameObject("Director", typeof(Director));
+            obj = new GameObject( "Director", typeof( Director ) );
         }
 
         instance = obj.GetComponent<Director>();
@@ -50,14 +50,14 @@ public class Director : MonoBehaviour
     #region Monobehaviour
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad( this.gameObject );
     }
 
     #endregion
 
 
     #region Scene management
-    private void ChangeScene(Structs.GameScene to)
+    private void ChangeScene( Structs.GameScene to )
     {
         currentScene = to;
 
@@ -90,7 +90,11 @@ public class Director : MonoBehaviour
                 //inputManager.SetEvents();
                 //uiManager.UpdateUI();
                 managerMap.SummonMap();
-                managerEntity.SummonPlayer( 0, Vector2.zero);
+                managerEntity.SummonPlayer( 0, Vector2.zero );
+
+                // Set camera
+                managerCamera.cameras[0].Set( CameraHelper.Type.Follow, managerEntity.playersScript[0].transform );
+                //managerCamera.cameras[0].Set( CameraHelper.Type.FixedAxis, managerEntity.playersScript[0].transform, true, 0f );
 
                 if (managerEntity.playersScript[0] != null)
                 {
@@ -121,7 +125,7 @@ public class Director : MonoBehaviour
 
 
     #region Game settings
-    public void SetGameSettings(Structs.GameMode gameMode, Structs.GameDifficulty gameDifficulty, Structs.GameView viewMode)
+    public void SetGameSettings( Structs.GameMode gameMode, Structs.GameDifficulty gameDifficulty, Structs.GameView viewMode )
     {
         currentGameMode = gameMode;
         currentGameDifficulty = gameDifficulty;
@@ -134,35 +138,35 @@ public class Director : MonoBehaviour
     // This is the first thing that begins the whole game
     public void EverythingBeginsHere()
     {
-        ChangeScene(Structs.GameScene.Initialization);
+        ChangeScene( Structs.GameScene.Initialization );
     }
 
     // This is automatic
     private void SwitchToMenu()
     {
-        ChangeScene(Structs.GameScene.Menu);
+        ChangeScene( Structs.GameScene.Menu );
     }
 
     public void GameBegin()
     {
-        ChangeScene(Structs.GameScene.LoadingGame);
+        ChangeScene( Structs.GameScene.LoadingGame );
     }
 
     // This is automatic
     private void SwitchToIngame()
     {
-        ChangeScene(Structs.GameScene.Ingame);
+        ChangeScene( Structs.GameScene.Ingame );
     }
 
     public void GameEnd()
     {
-        ChangeScene(Structs.GameScene.GameEnd);
+        ChangeScene( Structs.GameScene.GameEnd );
     }
 
     public void Exit()
     {
-        Debug.Log("Exit game!");
-        ChangeScene(Structs.GameScene.Exit);
+        Debug.Log( "Exit game!" );
+        ChangeScene( Structs.GameScene.Exit );
     }
     #endregion
 

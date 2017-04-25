@@ -34,7 +34,6 @@ public class ManagerEntity : MonoBehaviour
     public void SummonPlayer(int which, Vector2 position)
     {
         // Instantiate
-        Debug.Log(which +" asd "+players.Length);
         players[which] = Instantiate(prefabPlayer, position, Quaternion.identity, transform) as GameObject;
         if (players[which] == null)
         {
