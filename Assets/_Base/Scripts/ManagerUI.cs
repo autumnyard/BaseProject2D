@@ -10,9 +10,11 @@ public class ManagerUI : MonoBehaviour
     private PanelBase panelHUD;
     [SerializeField]
     private PanelBase panelLoading;
+	[SerializeField]
+	private PanelBase panelDebug;
 
-    // Panel HUD
-    [Header("Ingame HUD"), SerializeField] private UnityEngine.UI.Text health;
+	// Panel HUD
+	[Header("Ingame HUD"), SerializeField] private UnityEngine.UI.Text health;
     [SerializeField] private UnityEngine.UI.Text mana;
     [SerializeField] private UnityEngine.UI.Text score;
     [SerializeField] private UnityEngine.UI.Text enemycount;
@@ -39,26 +41,30 @@ public class ManagerUI : MonoBehaviour
                 panelMenu.Show();
                 panelHUD.Hide();
                 panelLoading.Hide();
-                break;
+                panelDebug.Hide();
+				break;
 
             case Structs.GameScene.Ingame:
                 panelMenu.Hide();
                 panelHUD.Show();
                 panelLoading.Hide();
+                panelDebug.Show();
                 break;
 
-            case Structs.GameScene.LoadingGame:
+			case Structs.GameScene.LoadingGame:
                 panelMenu.Hide();
                 panelHUD.Hide();
                 panelLoading.Show();
+                panelDebug.Hide();
                 break;
 
-            default:
+			default:
                 panelMenu.Hide();
                 panelHUD.Hide();
                 panelLoading.Hide();
+                panelDebug.Hide();
                 break;
-        }
+		}
     }
     #endregion
 

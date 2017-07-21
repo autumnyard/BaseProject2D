@@ -9,6 +9,7 @@ public class ManagerCamera : MonoBehaviour
 
 
     #region Monobehaviour
+
     void Awake()
     {
         Director.Instance.managerCamera = this;
@@ -29,10 +30,8 @@ public class ManagerCamera : MonoBehaviour
         Debug.Log( "ManagerCamera: We have " + cameras.Length + " cameras, of which the main camera is: " + Camera.main.name );
 #endif
     }
-    #endregion
-
-
-    #region
 
     #endregion
+
+	
 }

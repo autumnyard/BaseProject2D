@@ -5,125 +5,160 @@ using UnityEngine;
 public class CameraHelper : MonoBehaviour
 {
 
-    public enum Type : int
-    {
-        Unsetted, // If this is true, then set manually to default
-        //FixedPoint = 0, // This can be done following a non-moving GameObject
-        //SnapToPoints, // This has different FixedPoints, and snaps to the one closer to the player
-        FixedAxis,
-        Follow
-    }
+	public enum Type : int
+	{
+		Unsetted, // If this is true, then set manually to default
+		FixedPoint, // This can be done following a non-moving GameObject
+					//SnapToPoints, // This has different FixedPoints, and snaps to the one closer to the player
+		FixedAxis,
+		Follow
+	}
 
-    #region Variables
-    // Main settings
-    [Header( "Main settings" ), SerializeField] private Type type;
-    new private Transform camera;
-    public Transform target;// { private set; get; }
+	#region Variables
+	// Main settings
+	[Header( "Main settings" ), SerializeField] private Type type;
+	new private Transform camera;
+	public Transform target;// { private set; get; }
 
-    // Fixed axis specific variables
-    [Header( "Fixed axis" )]
-    public bool isHorizontal = true; // True = horizontal. False = vertical
-    public float fixedValue = 0f; // If the axis is horizontal, this is the height. If the axis is vertical, this is the X value
+	// Fixed point specific variables
+	[Header( "Fixed point" )]
+	public Vector2 targetPoint = Vector2.zero;
 
-    // Follow type specific variables
+	// Fixed axis specific variables
+	[Header( "Fixed axis" )]
+	public bool isHorizontal = true; // True = horizontal. False = vertical
+	public float fixedValue = 0f; // If the axis is horizontal, this is the height. If the axis is vertical, this is the X value
 
+	// Follow type specific variables
+	[Header( "Follow" )]
+	public float maxSpeed = 20f; // Should be used to clamp the speed, NOT YET IMPLEMENTED TODO
 
-    // Cursor locking
-    /*
+	// Cursor locking
+	/*
     [SerializeField]
     private bool cursorLocking = true;
     private CursorLocking cursorLock;
     */
 
-    // Movement settings
-    /*
+	// Movement settings
+	/*
     [SerializeField,Header("Fidgeting")]
     private float damping = 5.0f;
     private bool smoothRotation = false;
     private float rotationDamping = 10.0f;
     */
 
-    #endregion
+	#endregion
 
-    #region Monobehaviour
-    private void Awake()
-    {
-        camera = transform;
+	#region Monobehaviour
+	private void Awake()
+	{
+		camera = transform;
 
-    }
-    void FixedUpdate()
-    {
-        if (camera != null)
-        {
-            if (target != null)
-            {
-                switch (type)
-                {
-                    case Type.FixedAxis:
-                        CameraFixedAxis();
-                        break;
+	}
 
-                    case Type.Follow:
-                        CameraFollow();
-                        break;
+	void FixedUpdate()
+	{
+		if( camera != null )
+		{
+			if( target != null )
+			{
+				switch( type )
+				{
+					case Type.FixedPoint:
+						// Doesn't need to be updated, damn it that's the point
+						//CameraFixedPoint();
+						break;
 
-                }
-            }
-        }
-        else
-        {
-            //Debug.LogError( "There's no Camera component" + name );
-        }
-    }
-    #endregion
+					case Type.FixedAxis:
+						CameraFixedAxis();
+						break;
 
-    #region Options
+					case Type.Follow:
+						CameraFollow();
+						break;
 
-    private void CameraFixedAxis()
-    {
-        Vector3 newPos = Vector3.zero;
-        if (target != null)
-        {
-            float newPosX = (isHorizontal) ? target.localPosition.x : fixedValue;
-            float newPosY = (isHorizontal) ? fixedValue : target.localPosition.y;
-            newPos = new Vector3( newPosX, newPosY, -10 );
-            camera.localPosition = newPos;
-        }
-        else
-        {
-            //Debug.LogError( "There's no target in camera " + name );
-        }
-    }
-
-    private void CameraFollow()
-    {
-        Vector3 newPos = Vector3.zero;
-        if (target != null)
-        {
-            newPos = new Vector3( target.localPosition.x, target.localPosition.y, -10 );
-            camera.localPosition = newPos;
-        }
-        else
-        {
-            //Debug.LogError( "There's no target in camera " + name );
-        }
-    }
-    #endregion
+				}
+			}
+		}
+		else
+		{
+			//Debug.LogError( "There's no Camera component" + name );
+		}
+	}
+	#endregion
 
 
-    #region Public
-    public void Set( Type typeP = Type.Follow, Transform targetP = null )
-    {
-        type = typeP;
-        target = targetP;
-    }
+	#region Options
+	private void CameraFixedPoint()
+	{
+		Vector3 newPos = Vector3.zero;
+		if( targetPoint != null )
+		{
+			newPos = new Vector3( targetPoint.x, targetPoint.y, -10 );
+			camera.localPosition = newPos;
+		}
+		else
+		{
+			//Debug.LogError( "There's no target in camera " + name );
+		}
+	}
 
-    public void Set( Type typeP = Type.FixedAxis, Transform targetP = null, bool isHorizontalP = false, float fixedValueP = 0f )
-    {
-        type = typeP;
-        target = targetP;
-        isHorizontal = isHorizontalP;
-        fixedValue = fixedValueP;
-    }
-    #endregion
+	private void CameraFixedAxis()
+	{
+		Vector3 newPos = Vector3.zero;
+		if( target != null )
+		{
+			float newPosX = (isHorizontal) ? target.localPosition.x : fixedValue;
+			float newPosY = (isHorizontal) ? fixedValue : target.localPosition.y;
+			newPos = new Vector3( newPosX, newPosY, -10 );
+			camera.localPosition = newPos;
+		}
+		else
+		{
+			//Debug.LogError( "There's no target in camera " + name );
+		}
+	}
+
+	private void CameraFollow()
+	{
+		Vector3 newPos = Vector3.zero;
+		if( target != null )
+		{
+			newPos = new Vector3( target.localPosition.x, target.localPosition.y, -10 );
+			camera.localPosition = newPos;
+		}
+		else
+		{
+			//Debug.LogError( "There's no target in camera " + name );
+		}
+	}
+	#endregion
+
+
+	#region Public
+	public void SetFixedPoint( Vector2 targetPointP = default( Vector2 ) )
+	{
+		type = Type.FixedPoint;
+		targetPoint = targetPointP;
+
+		// Just set it once
+		CameraFixedPoint();
+	}
+
+	public void SetFollow( Transform targetP = null )
+	{
+		type = Type.Follow;
+		target = targetP;
+		//maxSpeed = maxSpeedP;
+	}
+
+	public void SetFixedAxis( Transform targetP = null, bool isHorizontalP = false, float fixedValueP = 0f )
+	{
+		type = Type.FixedAxis;
+		target = targetP;
+		isHorizontal = isHorizontalP;
+		fixedValue = fixedValueP;
+	}
+	#endregion
 }

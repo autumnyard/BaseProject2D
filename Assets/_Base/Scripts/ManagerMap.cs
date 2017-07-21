@@ -5,31 +5,48 @@ using UnityEngine;
 public class ManagerMap : MonoBehaviour
 {
 
-    [SerializeField] private GameObject prefabMap;
-    private GameObject map;
+	[SerializeField] private GameObject[] maps;
+	private GameObject map;
+	public Map mapScript;
 
-    void Awake()
-    {
-        Director.Instance.managerMap = this;
-    }
+	void Awake()
+	{
+		Director.Instance.managerMap = this;
+	}
 
 
-    public void SummonMap()
-    {
-        map = Instantiate(prefabMap, this.transform) as GameObject;
-    }
+	#region Private methods
 
-    private void RemoveMap()
-    {
-        if (map != null)
-        {
-            Destroy(map);
-            map = null;
-        }
-    }
+	private void SummonMap( int which )
+	{
+		map = Instantiate( maps[which], this.transform ) as GameObject;
+		mapScript = map.GetComponent<Map>();
+	}
 
-    public void Reset()
-    {
-        RemoveMap();
-    }
+	private void RemoveCurrentMap()
+	{
+		if( map != null )
+		{
+			Destroy( map );
+			map = null;
+		}
+	}
+
+	#endregion
+
+
+	#region Public methods
+
+	public void LoadMap( int which = 0 )
+	{
+		RemoveCurrentMap();
+		SummonMap( which );
+	}
+
+	public void Reset()
+	{
+		RemoveCurrentMap();
+	}
+
+	#endregion
 }
