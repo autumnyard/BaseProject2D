@@ -5,9 +5,9 @@ using UnityEngine;
 public class DebugHelper : MonoBehaviour
 {
 
-	ManagerCamera	managerCamera;
-	ManagerEntity	managerEntity;
-	ManagerMap		managerMap;
+	ManagerCamera managerCamera;
+	ManagerEntity managerEntity;
+	ManagerMap managerMap;
 
 
 	void Start()
@@ -36,14 +36,32 @@ public class DebugHelper : MonoBehaviour
 	#endregion
 
 	#region Lets make this rock
+	public void SwitchToLevel( int number )
+	{
+		//managerMap.LoadMap( 0 );
+		Director.Instance.DebugLoadLevel( number );
+	}
+
 	public void SwitchToLevel1()
 	{
-		managerMap.LoadMap( 0 );
+		//managerMap.LoadMap( 0 );
+		Director.Instance.DebugLoadLevel( 0 );
 	}
 
 	public void SwitchToLevel2()
 	{
-		managerMap.LoadMap( 1 );
+		//managerMap.LoadMap( 1 );
+		Director.Instance.DebugLoadLevel( 1 );
+	}
+
+	public void SwitchToLevelNext()
+	{
+		Director.Instance.DebugLevelNext();
+	}
+
+	public void SwitchToLevelPrevious()
+	{
+		Director.Instance.DebugLevelPrevious();
 	}
 	#endregion
 }

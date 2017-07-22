@@ -28,6 +28,7 @@ public class ManagerMap : MonoBehaviour
 		if( map != null )
 		{
 			Destroy( map );
+			mapScript = null;
 			map = null;
 		}
 	}
@@ -39,7 +40,7 @@ public class ManagerMap : MonoBehaviour
 
 	public void LoadMap( int which = 0 )
 	{
-		RemoveCurrentMap();
+		//RemoveCurrentMap();
 		SummonMap( which );
 	}
 

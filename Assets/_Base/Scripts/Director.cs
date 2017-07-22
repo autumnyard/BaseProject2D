@@ -21,6 +21,9 @@ public class Director : MonoBehaviour
 	public Structs.GameView currentGameView { private set; get; }
 	public Structs.GameScene currentScene;
 
+	private int maxLevelNumber = 2;
+	public int currentLevel = 0;
+
 	public bool isPaused;
 	#endregion
 
@@ -90,7 +93,8 @@ public class Director : MonoBehaviour
 				//inputManager.SetEvents();
 				//uiManager.UpdateUI();
 				// This loads the map, sets the player and the camera
-				LoadLevel( 0 );
+				// Using the number of the level
+				LoadLevel();
 
 				if( managerEntity.playersScript[0] != null )
 				{
@@ -101,9 +105,15 @@ public class Director : MonoBehaviour
 				managerUI.SetPanels();
 				break;
 
+			case Structs.GameScene.GameReset:
+				managerEntity.playersScript[0].OnDie -= GameEnd;
+				managerEntity.Reset();
+				managerMap.Reset();
+				GameBegin();
+				break;
+
 			case Structs.GameScene.GameEnd:
 				managerEntity.playersScript[0].OnDie -= GameEnd;
-
 				managerEntity.Reset();
 				managerMap.Reset();
 				managerInput.SetEvents();
@@ -120,7 +130,7 @@ public class Director : MonoBehaviour
 	#endregion
 
 
-	#region Game settings
+	#region Game settings & management
 	public void SetGameSettings( Structs.GameMode gameMode, Structs.GameDifficulty gameDifficulty, Structs.GameView viewMode )
 	{
 		currentGameMode = gameMode;
@@ -128,11 +138,16 @@ public class Director : MonoBehaviour
 		currentGameView = viewMode;
 	}
 
-	private void LoadLevel( int levelNumber )
+	private void LoadLevel()
 	{
+		// Reset entities and map
+		managerEntity.Reset();
+		managerMap.Reset();
 
-		managerMap.LoadMap( levelNumber );
+		// Load the current level
+		managerMap.LoadMap( currentLevel );
 		var newMap = managerMap.mapScript;
+		Debug.Log( "Loading level number: " + (currentLevel + 1).ToString() );
 
 		// Load player init position from map
 		// If there is a player init pos in the map data
@@ -147,7 +162,7 @@ public class Director : MonoBehaviour
 		}
 		managerEntity.SummonPlayer( 0, playerInitPos );
 
-		// Set camera
+		// And finally, set camera
 		Vector2 cameraInitPos = Vector2.zero;
 		if( newMap.cameraGrabs.Count > 0 )
 		{
@@ -163,6 +178,28 @@ public class Director : MonoBehaviour
 		}
 	}
 
+	private void LoadNumberLevel( int levelNumber )
+	{
+		currentLevel = levelNumber;
+	}
+
+	private void LoadNextLevel()
+	{
+		currentLevel++;
+		if( currentLevel >= maxLevelNumber )
+		{
+			currentLevel = maxLevelNumber - 1;
+		}
+	}
+
+	private void LoadPreviousLevel()
+	{
+		currentLevel--;
+		if( currentLevel < maxLevelNumber )
+		{
+			currentLevel = 0;
+		}
+	}
 	#endregion
 
 
@@ -190,6 +227,11 @@ public class Director : MonoBehaviour
 		ChangeScene( Structs.GameScene.Ingame );
 	}
 
+	private void GameReset()
+	{
+		ChangeScene( Structs.GameScene.GameReset );
+	}
+
 	public void GameEnd()
 	{
 		ChangeScene( Structs.GameScene.GameEnd );
@@ -208,5 +250,23 @@ public class Director : MonoBehaviour
 	//{
 	//    managerEntity.playersScript[0].Hurt();
 	//}
+
+	public void DebugLoadLevel( int numb )
+	{
+		LoadNumberLevel( numb );
+		GameReset();
+	}
+
+	public void DebugLevelNext()
+	{
+		LoadNextLevel();
+		GameReset();
+	}
+
+	public void DebugLevelPrevious()
+	{
+		LoadPreviousLevel();
+		GameReset();
+	}
 	#endregion
 }

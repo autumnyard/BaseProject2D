@@ -5,9 +5,9 @@ public class ManagerEntity : MonoBehaviour
 {
     #region Variables
     // Players
-    const int maxPlayers = 2;
+    const int maxPlayers = 1;
     [SerializeField] private GameObject prefabPlayer;
-    private GameObject[] players = new GameObject[maxPlayers];
+	private GameObject[] players = new GameObject[maxPlayers];
     [HideInInspector] public EntityBase[] playersScript = new EntityBase[maxPlayers];
 
     // TODO: Enemy management in a dynamic list
@@ -21,7 +21,11 @@ public class ManagerEntity : MonoBehaviour
     void Awake()
     {
         Director.Instance.managerEntity = this;
-    }
+
+		players = new GameObject[maxPlayers];
+		playersScript = new EntityBase[maxPlayers];
+
+	}
     #endregion
 
 
@@ -43,7 +47,7 @@ public class ManagerEntity : MonoBehaviour
 
         // Get player script
         playersScript[which] = players[which].GetComponent<EntityBase>();
-        if (players[which] == null)
+        if ( playersScript[which] == null)
         {
             Debug.LogError("Cannot find player script in player " + which);
             return;
@@ -64,11 +68,12 @@ public class ManagerEntity : MonoBehaviour
 
     private void RemovePlayer(int which)
     {
-        if (players[which] != null)
+        if (players[which] != null )
         {
             Destroy(players[which]);
+			playersScript[which] = null;
             players[which] = null;
-        }
+		}
     }
     #endregion
 

@@ -26,8 +26,9 @@
         LoadingGame,
         Menu,
         Ingame,
+        GameReset,
         GameEnd,
-        Score,
+		Score,
         Credits,
         Exit,
         MaxValues
