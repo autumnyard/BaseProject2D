@@ -9,14 +9,14 @@ public class CameraHelper : MonoBehaviour
 	{
 		Unsetted, // If this is true, then set manually to default
 		FixedPoint, // This can be done following a non-moving GameObject
-					//SnapToPoints, // This has different FixedPoints, and snaps to the one closer to the player
+		SnapToCameraGrabs, // This has different CameraGrabs, and snaps to the one closer to the player
 		FixedAxis,
 		Follow
 	}
 
 	#region Variables
 	// Main settings
-	[Header( "Main settings" ), SerializeField] private Type type;
+	[Header( "Main settings" )/*, SerializeField*/] public Type type; // I make it public for Director.Update
 	new private Transform camera;
 	public Transform target;// { private set; get; }
 
@@ -28,6 +28,12 @@ public class CameraHelper : MonoBehaviour
 	[Header( "Fixed axis" )]
 	public bool isHorizontal = true; // True = horizontal. False = vertical
 	public float fixedValue = 0f; // If the axis is horizontal, this is the height. If the axis is vertical, this is the X value
+
+	// Snap to CameraGrabs specific variables
+	[Header( "Snap to CameraGrabs" )]
+	public float distanceToSnap = 100f;
+	public delegate void Delegate( float x, float y );
+	public Delegate OnNewCameraGrab;
 
 	// Follow type specific variables
 	[Header( "Follow" )]
@@ -120,6 +126,13 @@ public class CameraHelper : MonoBehaviour
 		}
 	}
 
+	private void CameraSnapToCameraGrabs( float x = 0f, float y = 0f )
+	{
+		Vector3 newPos = Vector3.zero;
+		newPos = new Vector3( x, y, -10 );
+		camera.localPosition = newPos;
+	}
+
 	private void CameraFollow()
 	{
 		Vector3 newPos = Vector3.zero;
@@ -151,6 +164,22 @@ public class CameraHelper : MonoBehaviour
 		type = Type.Follow;
 		target = targetP;
 		//maxSpeed = maxSpeedP;
+	}
+
+	public void SetSnapToCameraGrab()
+	{
+		type = Type.SnapToCameraGrabs;
+		//targetPoint = targetPointP;
+
+		// This should work with the delegate
+		OnNewCameraGrab += CameraSnapToCameraGrabs; 
+		// DEBUG: This callback will be called from the.. Director?
+		// 
+		// TODO: I must unlink this somewhere, sometime
+		// TODO: Most likely with a general reset each time we reset the CameraManager
+
+		// Just set it once
+		CameraFixedPoint();
 	}
 
 	public void SetFixedAxis( Transform targetP = null, bool isHorizontalP = false, float fixedValueP = 0f )

@@ -33,5 +33,6 @@ public class ManagerCamera : MonoBehaviour
 
     #endregion
 
+	// TODO: Holy shit man, everything 
 	
 }

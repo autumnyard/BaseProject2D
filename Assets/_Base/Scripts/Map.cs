@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
+	public CameraHelper.Type cameraType = CameraHelper.Type.Unsetted;
 	public List<Vector2> players;
 	public List<Vector2> cameraGrabs;
 
@@ -18,11 +19,12 @@ public class Map : MonoBehaviour
 			switch( item.type )
 			{
 				case MapThingie.Type.CameraGrab:
-					players.Add( item.transform.position );
+					cameraGrabs.Add( item.transform.position );
+					//Debug.Log("Adding camera grab: "+ item.transform.position .x);
 					break;
 
 				case MapThingie.Type.Player:
-					cameraGrabs.Add( item.transform.position );
+					players.Add( item.transform.position );
 					break;
 
 				default:

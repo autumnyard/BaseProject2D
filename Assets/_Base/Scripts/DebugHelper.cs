@@ -33,6 +33,16 @@ public class DebugHelper : MonoBehaviour
 	{
 		Director.Instance.managerCamera.cameras[0].SetFixedAxis( managerEntity.playersScript[0].transform, false );
 	}
+
+	public void SetCameraToFixedPoint()
+	{
+		Director.Instance.managerCamera.cameras[0].SetFixedPoint( managerMap.mapScript.cameraGrabs[0] );
+	}
+
+	public void SetCameraToSnapToCameraGrabs()
+	{
+		Director.Instance.managerCamera.cameras[0].SetSnapToCameraGrab();
+	}
 	#endregion
 
 	#region Lets make this rock

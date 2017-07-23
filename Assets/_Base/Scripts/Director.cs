@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 
 public class Director : MonoBehaviour
@@ -56,6 +57,13 @@ public class Director : MonoBehaviour
 		DontDestroyOnLoad( this.gameObject );
 	}
 
+	private void LateUpdate()
+	{
+		if( managerCamera.cameras[0].type == CameraHelper.Type.SnapToCameraGrabs )
+		{
+			CheckForNewCameraGrab();
+		}
+	}
 	#endregion
 
 
@@ -147,7 +155,7 @@ public class Director : MonoBehaviour
 		// Load the current level
 		managerMap.LoadMap( currentLevel );
 		var newMap = managerMap.mapScript;
-		Debug.Log( "Loading level number: " + (currentLevel + 1).ToString() );
+		//Debug.Log( "Loading level number: " + (currentLevel + 1).ToString() );
 
 		// Load player init position from map
 		// If there is a player init pos in the map data
@@ -164,17 +172,38 @@ public class Director : MonoBehaviour
 
 		// And finally, set camera
 		Vector2 cameraInitPos = Vector2.zero;
-		if( newMap.cameraGrabs.Count > 0 )
+
+		switch( newMap.cameraType )
 		{
-			// If there is camera data, init camera to first cameragrab
-			cameraInitPos = managerMap.mapScript.cameraGrabs[0];
-			managerCamera.cameras[0].SetFixedPoint( cameraInitPos );
-		}
-		else
-		{
-			// If there is no camera data, set camera to follow the player
-			cameraInitPos = Vector2.zero;
-			managerCamera.cameras[0].SetFollow( managerEntity.playersScript[0].transform );
+			case CameraHelper.Type.FixedPoint:
+				if( newMap.cameraGrabs.Count > 0 )
+				{
+					// If there is camera data, init camera to first cameragrab
+					cameraInitPos = managerMap.mapScript.cameraGrabs[0];
+				}
+				managerCamera.cameras[0].SetFixedPoint( cameraInitPos );
+				break;
+
+			case CameraHelper.Type.FixedAxis:
+				break;
+
+			case CameraHelper.Type.SnapToCameraGrabs:
+				//Debug.Log( "CameraGrabs on new map: " + newMap.cameraGrabs.Count );
+				if( newMap.cameraGrabs.Count > 0 )
+				{
+					managerCamera.cameras[0].SetSnapToCameraGrab();
+				}
+				else
+				{
+					// If there are no camera grabs, just fall back to default follow player
+					managerCamera.cameras[0].SetFollow( managerEntity.playersScript[0].transform );
+				}
+				break;
+
+			default: // By default, just follow the first player
+			case CameraHelper.Type.Follow:
+				managerCamera.cameras[0].SetFollow( managerEntity.playersScript[0].transform );
+				break;
 		}
 	}
 
@@ -268,5 +297,31 @@ public class Director : MonoBehaviour
 		LoadPreviousLevel();
 		GameReset();
 	}
+
+	private void CheckForNewCameraGrab()
+	{
+		// I'm calling this from Director.Update
+
+		Vector2 player = managerEntity.playersScript[0].transform.position;
+		List<Vector2> cameraGrabs = managerMap.mapScript.cameraGrabs;
+		float min = 999;
+		Vector2 correctCameraGrab = Vector2.zero;
+
+		// Constantly checking for distance between player and ALL camera grabs?
+		// Extremely inefficient
+		for( int i = 0; i < cameraGrabs.Count; i++ )
+		{
+			float checking = Vector2.Distance( player, cameraGrabs[i] );
+			if( checking < min )
+			{
+				min = checking;
+				correctCameraGrab = cameraGrabs[i];
+			}
+		}
+
+		// When the result of the check is different, then call CameraHelper.OnNewCameraGrab(x,y)
+		managerCamera.cameras[0].OnNewCameraGrab( correctCameraGrab.x, correctCameraGrab.y );
+	}
+
 	#endregion
 }
