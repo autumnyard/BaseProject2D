@@ -1,0 +1,9 @@
+
+ManagerAudio
+	I guess there's two solutions:
+	1) Having a limited number of AudioSources and juggle between them.
+	2) Just creating as many AudioSources whenever.
+
+	And two approaches to its distribution:
+	1) Everything encapsulated in the ManagerAudio containing Object
+	2) Every AudioSource just spread wherever.

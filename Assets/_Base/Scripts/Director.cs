@@ -16,6 +16,8 @@ public class Director : MonoBehaviour
 	public ManagerInput managerInput;
 	public ManagerUI managerUI;
 	//public ScoreManager scoreManager;
+	public ManagerAudio managerAudio;
+
 
 	public Structs.GameMode currentGameMode { private set; get; }
 	public Structs.GameDifficulty currentGameDifficulty { private set; get; }

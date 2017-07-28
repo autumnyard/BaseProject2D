@@ -18,6 +18,7 @@ public class Map : MonoBehaviour
 		{
 			switch( item.type )
 			{
+
 				case MapThingie.Type.CameraGrab:
 					cameraGrabs.Add( item.transform.position );
 					//Debug.Log("Adding camera grab: "+ item.transform.position .x);
@@ -29,8 +30,8 @@ public class Map : MonoBehaviour
 
 				default:
 					break;
-			}
 
+			}
 		}
 
 		// Populate the obstacles, enemies, items, whatever
